@@ -3,9 +3,9 @@ import logging
 
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
-from outpost24lib.tools import xmltools
+from outpost24hiablib.tools import xmltools
 
-import outpost24lib.outpost24exceptions
+import outpost24hiablib.outpost24exceptions
 
 class User(object):  # pylint: disable=too-many-public-methods
     """Models the user object of outpost24."""

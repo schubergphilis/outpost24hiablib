@@ -2,7 +2,7 @@ import logging
 
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
-from outpost24lib.tools import xmltools
+from outpost24hiablib.tools import xmltools
 
 class TargetGroup(object):
     """description of class"""

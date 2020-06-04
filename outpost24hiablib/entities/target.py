@@ -3,7 +3,7 @@ import datetime
 
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element
-from outpost24lib.tools import xmltools
+from outpost24hiablib.tools import xmltools
 
 class Target(object):
     """description of class"""
