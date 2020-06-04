@@ -12,7 +12,7 @@ from .entities import TargetGroup
 from .entities import UserGroup
 from .entities import Target
 from .entities import Scanner
-from outpost24lib.tools import xmltools
+from outpost24hiablib.tools import xmltools
 
 LOGGER_BASENAME = '''outpost24lib'''
 LOGGER = logging.getLogger(LOGGER_BASENAME)
