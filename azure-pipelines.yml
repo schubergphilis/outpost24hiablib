@@ -54,7 +54,7 @@ jobs:
           #inputs:
           #  pythonUploadServiceConnection: pypitest
  
-        - script: |
-                python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
+        #- script: |
+        #       python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
   
   environment: PyPi
