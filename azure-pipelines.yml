@@ -45,9 +45,9 @@ jobs:
         - script: |
                 pip install setuptools wheel twine
           displayName: 'Install dependencies'
-        - script: |
-                python setup.py sdist bdist_wheel
-          displayName: 'Create packages'
+          #- script: |
+          #      python setup.py sdist bdist_wheel
+          #displayName: 'Create packages'
 
           #- task: TwineAuthenticate@1
           #displayName: 'Twine Authenticate'
