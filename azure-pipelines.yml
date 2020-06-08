@@ -50,12 +50,12 @@ jobs:
           displayName: 'Create packages'
 
         - task: TwineAuthenticate@1
-  displayName: 'Twine Authenticate'
-  inputs:
-    # In this case, name of the service connection is "pypitest".
-    pythonUploadServiceConnection: pypitest
+          displayName: 'Twine Authenticate'
+          inputs:
+          # In this case, name of the service connection is "pypitest".
+            pythonUploadServiceConnection: pypitest
  
-# Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
-- script: |
-     python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
+          # Use command line script to 'twine upload', use -r to pass the repository name and --config-file to pass the environment variable set by the authenticate task.
+           - script: |
+                   python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
   environment: PyPi
