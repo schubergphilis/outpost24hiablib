@@ -9,7 +9,7 @@ trigger:
 jobs:
 - job: BuildTest
   pool:
-  vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-latest'
   strategy:
     matrix:
       Python35:
@@ -36,7 +36,7 @@ jobs:
     displayName: 'pytest'
 - deployment: PushToPyPi        # instead of job keyword, use deployment keyword
   pool:
-  vmImage: 'ubuntu-latest'
+    vmImage: 'ubuntu-latest'
   strategy:
     runOnce:
       deploy:
