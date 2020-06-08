@@ -43,5 +43,16 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - script:
+        - script: |
                 pip install setuptools wheel twine
+          displayName: 'Install dependencies'
+        - script: |
+                python setup.py sdist bdist_wheel
+          displayName: 'Create packages'
+        - task: TwineAuthenticate@1
+          displayName: 'Twine Authenticate'
+          inputs:
+                  pythonUploadServiceConnection: pypitest
+        - script: |
+                python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
+  environment: PyPi
