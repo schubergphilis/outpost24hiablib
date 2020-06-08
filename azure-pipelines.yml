@@ -42,7 +42,7 @@ jobs:
     runOnce:
       deploy:
         steps:
-        - script: |
+        - script:
                 pip install setuptools wheel twine
           displayName: 'Install dependencies'
           #- script: |
