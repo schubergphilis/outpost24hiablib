@@ -7,7 +7,7 @@ trigger:
 - master
 
 jobs:
-- job: BuildTest
+- job: BuildTestCreateAndPublishArtifact
   pool:
     vmImage: 'ubuntu-latest'
   strategy:
