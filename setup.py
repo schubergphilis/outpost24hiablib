@@ -29,7 +29,7 @@ setup(
     name='''outpost24lib''',
     version=version,
     description='''Client for interacting with Outpost24 HIAB''',
-    long_description=readme + '\n\n' + history,,
+    long_description=readme + '\n\n' + history,
     #long_description=readme + '\n\n' + history,
     author='''Theodoor Scholte''',
     author_email='''tscholte@schubergphilis.com''',
