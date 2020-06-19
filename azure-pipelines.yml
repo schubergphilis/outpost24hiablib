@@ -37,7 +37,11 @@ jobs:
   
   - script: |
       python setup.py sdist
-    displayName: 'Artifact creation'
+    displayName: 'Make sdist'
+
+  - script: |
+      python setup.py bdist_wheel --universal
+    displayName: 'Make wheel'
     
   - task: CopyFiles@2  
     inputs:    
