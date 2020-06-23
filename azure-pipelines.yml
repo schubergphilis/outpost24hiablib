@@ -52,26 +52,3 @@ jobs:
       PathtoPublish: '$(Build.ArtifactStagingDirectory)'                  
       ArtifactName: 'outposthiablib'    
       publishLocation: 'Container'
-      
-    #- deployment: PushToPyPi
-    #dependsOn: BuildTest
-    #pool:
-    #vmImage: 'ubuntu-latest'
-    #strategy:
-    #runOnce:
-    #  deploy:
-    #    steps:
-    #    - script: |
-    #            pip install setuptools wheel twine
-    #      displayName: 'Install dependencies'
-    #    - script: |
-    #            ls
-                #python setup.py sdist bdist_wheel
-                #      displayName: 'Create packages'
-                #- task: TwineAuthenticate@1
-                #displayName: 'Twine Authenticate'
-                #inputs:
-                #  pythonUploadServiceConnection: pypitest
-                #- script: |
-                #python -m twine upload -r "pypitest" --config-file $(PYPIRC_PATH) dist/*.whl
-                #environment: PyPi

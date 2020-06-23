@@ -1,6 +1,6 @@
-=======
+============
 outpost24lib
-=======
+============
 
 A python library for interfacing with Outpost24 HIAB api
 
