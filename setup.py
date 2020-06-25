@@ -30,9 +30,10 @@ setup(
     version=version,
     description='''Client for interacting with Outpost24 HIAB''',
     long_description=readme + '\n\n' + history,
+    #long_description=readme + '\n\n' + history,
     author='''Theodoor Scholte''',
     author_email='''tscholte@schubergphilis.com''',
-    url='''https://sbp.gitlab.schubergphilis.com/Security/outpost24/outpost24lib''',
+    url='''https://github.com/schubergphilis/outpost24hiablib''',
     packages=find_packages(where='.', exclude=('tests', 'hooks')),
     package_dir={'''outpost24hiab_python''':
                  '''outpost24hiab_python'''},

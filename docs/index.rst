@@ -1,15 +1,14 @@
-.. oktalib documentation master file, created by
-   sphinx-quickstart on 2018-05-25.
+.. outpost24hiablib documentation master file, created by
+   sphinx-quickstart on Wed Jun 24 10:38:01 2020.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to oktalib's documentation!
-===================================
-
-Contents:
+Welcome to outpost24hiablib's documentation!
+============================================
 
 .. toctree::
    :maxdepth: 2
+   :caption: Contents:
 
    readme
    installation
@@ -18,6 +17,8 @@ Contents:
    modules
    authors
    history
+   
+
 
 Indices and tables
 ==================
@@ -25,4 +26,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

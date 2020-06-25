@@ -1,28 +1,29 @@
-oktalib package
-===============
+outpost24hiablib package
+========================
 
 Subpackages
 -----------
 
 .. toctree::
 
-    oktalib.entities
+    outpost24hiablib.entities
+	outpost24hiablib.tools
 
 Submodules
 ----------
 
-oktalib.oktalib module
-----------------------
+outpost24hiablib.outpost24hiablib module
+----------------------------------------
 
-.. automodule:: oktalib.oktalib
+.. automodule:: outpost24hiablib.outpost24hiablib
     :members:
     :undoc-members:
     :show-inheritance:
 
-oktalib.oktalibexceptions module
---------------------------------
+outpost24hiablib.outpost24hiablibexceptions module
+--------------------------------------------------
 
-.. automodule:: oktalib.oktalibexceptions
+.. automodule:: outpost24hiablib.outpost24exceptions
     :members:
     :undoc-members:
     :show-inheritance:
@@ -31,7 +32,7 @@ oktalib.oktalibexceptions module
 Module contents
 ---------------
 
-.. automodule:: oktalib
+.. automodule:: outpost24hiablib
     :members:
     :undoc-members:
     :show-inheritance:

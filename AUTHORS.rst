@@ -12,4 +12,3 @@ Contributors
 
 * Luander Ribeiro <lribeiro@schubergphilis.com>
 * You?
-~
