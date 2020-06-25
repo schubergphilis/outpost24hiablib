@@ -1,7 +1,7 @@
-outpost24lib
-=======
+outpost24hiablib
+================
 
 .. toctree::
    :maxdepth: 4
 
-   outpost24lib
+   outpost24hiablib
