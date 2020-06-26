@@ -4,13 +4,13 @@ Installation
 
 At the command line::
 
-    $ pip install outpost24lib
+    $ pip install outpost24hiablib
 
 Or, if you have virtualenvwrapper installed::
 
-    $ mkvirtualenv outpost24lib
-    $ pip install outpost24lib
+    $ mkvirtualenv outpost24hiablib
+    $ pip install outpost24hiablib
 
 Or, if you are using pipenv::
 
-    $ pipenv install outpost24lib
+    $ pipenv install outpost24hiablib
