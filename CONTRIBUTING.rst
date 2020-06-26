@@ -16,16 +16,16 @@ If you are proposing a feature:
 Get Started!
 ------------
 
-Ready to contribute? Here's how to set up `outpost24lib` for local development.
+Ready to contribute? Here's how to set up `outpost24hiablib` for local development.
 
 1. Clone your fork locally::
 
-    $ git clone https://github.com/schubergphilis/outpost24lib.git
+    $ git clone https://github.com/schubergphilis/outpost24hiablib.git
 
 2. Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your clone for local development::
 
-    $ mkvirtualenv outpost24lib
-    $ cd outpost24lib/
+    $ mkvirtualenv outpost24hiablib
+    $ cd outpost24hiablib/
     $ python setup.py develop
 
 3. Create a branch for local development::
