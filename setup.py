@@ -26,7 +26,7 @@ version = open('.VERSION').read()
 
 
 setup(
-    name='''outpost24lib''',
+    name='''outpost24hiablib''',
     version=version,
     description='''Client for interacting with Outpost24 HIAB''',
     long_description=readme + '\n\n' + history,
