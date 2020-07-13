@@ -22,20 +22,19 @@ LOGGER.addHandler(logging.NullHandler())
 
 
 class Outpost24:
-    def __init__(self, host, token):
+    def __init__(self, host, token, ssl_verify = True):
         logger_name = u'{base}.{suffix}'.format(base=LOGGER_BASENAME,
                                                 suffix=self.__class__.__name__)
         self._logger = logging.getLogger(logger_name)
         self.host = host
         self.api = '{host}/opi/XMLAPI'.format(host = host)
         self.token = token
-        self.session = self._setup_session()
+        self.session = self._setup_session(ssl_verify)
 
 
-    def _setup_session(self):
+    def _setup_session(self, ssl_verify):
         session = Session()
-        #TODO: find out why OP24 certificate is invalid and remove this line
-        session.verify = False        
+        session.verify = ssl_verify
         session.params.update({
             'APPTOKEN': self.token
         })
@@ -258,7 +257,7 @@ class Outpost24:
         return False
 
 
-    def get_scanlog(self, filter = None, start = 0, limit = 1000):
+    def get_scanlog(self, filter = None, start = 0, limit = 1000, page = 0):
         """
         Retrieves scan log entries with filtering capabilities.
         
@@ -278,12 +277,13 @@ class Outpost24:
             for scan in scanlog.data:
             print(scan.target)
         """
-        payload="ACTION=SCANLOG&offset=0&page=1&start=0&limit=100&sort=TARGETGROUPNAME&dir=ASC&JSON=1"
+        payload="ACTION=SCANLOG&page={2}&start={0}&limit={1}&sort=DSCANSTARTDATE&dir=DESC&JSON=1".format(start, limit, page)
         if filter is not None:
-            payload += "&"
-            payload += filter.consolidate()
+            payload += filter.urlencode()
 
         response = self._post_url_urlencoded(self.api, payload)
+        # Convert json to object, making its attributes accessible by using: 
+        # object.attribute, instead of object['attribute']
         return json.loads(response, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
 
 
@@ -325,8 +325,9 @@ class Filter:
         filter = "filter%5B{0}%5D%5Bfield%5D={1}&filter%5B{0}%5D%5Bdata%5D%5Btype%5D={2}&filter%5B{0}%5D%5Bdata%5D%5Bcomparison%5D={3}&filter%5B{0}%5D%5Bdata%5D%5Bvalue%5D={4}".format(len(self.filters), field, type, comparison, value)
         self.filters.append(filter)
 
-    def consolidate(self):
+    def urlencode(self):
         result = ""
         for f in self.filters:
+            result += "&"
             result += f
         return result
