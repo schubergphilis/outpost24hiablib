@@ -13,6 +13,8 @@ from .entities import UserGroup
 from .entities import Target
 from .entities import Scanner
 from outpost24hiablib.tools import xmltools
+from collections import namedtuple
+import urllib
 
 LOGGER_BASENAME = '''outpost24lib'''
 LOGGER = logging.getLogger(LOGGER_BASENAME)
@@ -255,13 +257,76 @@ class Outpost24:
             return True
         return False
 
+
+    def get_scanlog(self, filter = None, start = 0, limit = 1000):
+        """
+        Retrieves scan log entries with filtering capabilities.
+        
+        Usage:
+
+            from outpost24hiablib import Outpost24
+            from outpost24hiablib import Filter
+
+            url = "https://<host>"
+            token = "<token>"
+
+            op24lib = Outpost24(url, token)
+            f = Filter()
+            f.add("TARGETGROUPNAME", "Prod")
+            scanlog = op24lib.get_scanlog(f)
+
+            for scan in scanlog.data:
+            print(scan.target)
+        """
+        payload="ACTION=SCANLOG&offset=0&page=1&start=0&limit=100&sort=TARGETGROUPNAME&dir=ASC&JSON=1"
+        if filter is not None:
+            payload += "&"
+            payload += filter.consolidate()
+
+        response = self._post_url_urlencoded(self.api, payload)
+        return json.loads(response, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+
+
+    def _post_url_urlencoded(self, url, payload):
+        results = []
+        try:
+            self.session.headers["content-type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+            response = self.session.post(url, data=payload)
+            return response.text
+        except ValueError:
+            self._logger.error('Error getting url :%s', url)
+            return []
+        finally:
+            self.session.headers.pop("content-type")
+
+
     def _post_url(self, url, payload, request_timeout=120):
         results = []
         payload['REQUESTTIMEOUT'] = request_timeout
         try:
             response = self.session.post(url, data=payload)
-            #print(response.text)
             return response.text
         except ValueError:
             self._logger.error('Error getting url :%s', url)
             return []
+
+class Filter:
+    """
+    Creates a filter to a request in Outpost24.
+    Usage:
+        filter = Filter()
+        filter.add_filter(field = "TARGETGROUPNAME", value = "prod")
+        op24lib.get_scanlog(filter)
+    """
+    def __init__(self):
+        self.filters = []
+
+    def add(self, field, value, type = "string", comparison = "all"):
+        filter = "filter%5B{0}%5D%5Bfield%5D={1}&filter%5B{0}%5D%5Bdata%5D%5Btype%5D={2}&filter%5B{0}%5D%5Bdata%5D%5Bcomparison%5D={3}&filter%5B{0}%5D%5Bdata%5D%5Bvalue%5D={4}".format(len(self.filters), field, type, comparison, value)
+        self.filters.append(filter)
+
+    def consolidate(self):
+        result = ""
+        for f in self.filters:
+            result += f
+        return result
