@@ -74,4 +74,25 @@ To use outpost24lib in a project:
 	
 	# delete targetgroups
 	isdeleted = op24lib.delete_targetgroups([TARGETGROUP_OBJECT])
+
+	# Get scan logs
+	Retrieves scan log entries with filtering capabilities.
+        
+	Usage:
+
+	from outpost24hiablib import Outpost24
+	from outpost24hiablib import Filter
+
+	url = "https://<host>"
+	token = "<token>"
+
+	op24lib = Outpost24(url, token)
+	f = Filter()
+	f.add("TARGETGROUPNAME", "Prod")
+  f.add("DSCANSTARTDATE", "2020-01-31", "date", "lt")
+  f.add("DSCANSTARTDATE", "2020-01-01", "date", "gt")
+	scanlog = op24lib.get_scanlog(f)
+
+	for scan in scanlog.data:
+	print(scan.target)
 	
