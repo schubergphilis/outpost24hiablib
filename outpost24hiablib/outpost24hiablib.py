@@ -77,23 +77,26 @@ class Outpost24:
 
     def get_parent_targetgroup_of_targetgroup(self, targetgroup):
         for t in self.get_targetgroups():
-            if(targetgroup.xparentid == t.xid):
-                return t
+            if(targetgroup.xparentid is not None):
+                if(targetgroup.xparentid == t.xid):
+                    return t
         return None
 
     def get_child_targetgroups_of_targetgroup(self, targetgroup):
         targetgroups = self.get_targetgroups()
         result = []
         for t in targetgroups:
-            if(t.xparentid == targetgroup.xid):
-                result.append(t)
+            if(t.xparentid is not None):
+                if(t.xparentid == targetgroup.xid):
+                    result.append(t)
         return result
 
     def get_user_of_targetgroup(self, targetgroup):
         users = self.get_users()
         for u in users:
-            if(targetgroup.xuserxid == u.xid):
-                return u
+            if(targetgroup.xuserxid is not None):
+                if(targetgroup.xuserxid == u.xid):
+                    return u
         return None
     
     def get_targets_in_targetgroup(self, targetgroup):
