@@ -13,3 +13,7 @@ History
 
 * First release to PyPi
 
+1.0.1 (17-08-2020)
+------------------
+
+* Small bugfixes
