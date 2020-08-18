@@ -17,3 +17,8 @@ History
 ------------------
 
 * Small bugfixes
+
+1.0.2 (18-08-2020)
+------------------
+
+* Small bugfixes

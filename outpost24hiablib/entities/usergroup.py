@@ -79,10 +79,6 @@ class UserGroup(object):
         return xmltools.get_bool_from_child_if_exists(self._data, 'WASX')
 
     @property
-    def wasx(self):
-        return xmltools.get_bool_from_child_if_exists(self._data, 'WASX')
-
-    @property
     def dashboard(self):
         return xmltools.get_bool_from_child_if_exists(self._data, 'DASHBOARD')
 
