@@ -54,8 +54,8 @@ class TargetGroup(object):
         return xmltools.get_str_from_child_if_exists(self._data, 'NAME')
 
     @property
-    def xparentid(self):
-        return xmltools.get_int_from_child_if_exists(self._data, 'XPARENTID')
+    def xiparentid(self):
+        return xmltools.get_int_from_child_if_exists(self._data, 'XIPARENTID')
 
 
 
