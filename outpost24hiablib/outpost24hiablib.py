@@ -230,7 +230,7 @@ class Outpost24:
     def create_targetgroup(self, name, parent_targetgroup=None):
         payload={'ACTION': 'UPDATETARGETGROUPDATA', 'JSON': '1', 'XID': '-1', 'NAME': name}
         if(parent_targetgroup):
-            payload[XIPARENTID] = parent_targetgroup.xid
+            payload['XIPARENTID'] = parent_targetgroup.xid
         response = self._post_url(self.api,payload)
         r = json.loads(response)
         if(r['success']==True):

@@ -22,3 +22,8 @@ History
 ------------------
 
 * Small bugfixes
+
+1.0.3 (11-09-2020)
+------------------
+
+* Small bugfixes
