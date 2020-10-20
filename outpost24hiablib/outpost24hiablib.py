@@ -3,6 +3,7 @@
 # File: outpost24lib.py
 
 import logging
+import logging.config
 from requests import Session
 import xml.etree.ElementTree as ET
 import json
@@ -14,9 +15,7 @@ from .entities import Target
 from .entities import Scanner
 from outpost24hiablib.tools import xmltools
 
-LOGGER_BASENAME = '''outpost24lib'''
-LOGGER = logging.getLogger(LOGGER_BASENAME)
-LOGGER.addHandler(logging.NullHandler())
+LOGGER_BASENAME = '''outpost24hiablib'''
 
 
 class Outpost24:
@@ -288,10 +287,18 @@ class Outpost24:
         try:
             response = self.session.post(url, data=payload)
             if(response.ok):
-                return response.text
+                textresponse = ET.fromstring(response.text)
+                result = xmltools.get_str_from_child_if_exists(textresponse, 'SUCCESS')
+                if(result == 'false'):
+                    errorcode = xmltools.get_str_from_child_if_exists(textresponse, 'ERRORCODE')
+                    message = xmltools.get_str_from_child_if_exists(textresponse, 'MESSAGE')
+                    self._logger.error('Posting to url: %s failed with error code: %s and message: %s', url, errorcode, message)
+                    raise RuntimeError('Failed to call Outpost24 HIAB API')
+                else:
+                    return response.text
             else:
                 self._logger.error('Posting to url: %s failed with response code: %s', url, str(response.status_code))
-                return []
+                raise RuntimeError('Failed to call Outpost24 HIAB API')
         except ValueError:
             self._logger.error('Error getting url :%s', url)
-            return []
+            raise RuntimeError('Failed to call Outpost24 HIAB API')
