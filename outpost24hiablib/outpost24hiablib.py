@@ -13,6 +13,8 @@ from .entities import UserGroup
 from .entities import Target
 from .entities import Scanner
 from outpost24hiablib.tools import xmltools
+from collections import namedtuple
+import urllib
 
 LOGGER_BASENAME = '''outpost24lib'''
 LOGGER = logging.getLogger(LOGGER_BASENAME)
@@ -20,20 +22,19 @@ LOGGER.addHandler(logging.NullHandler())
 
 
 class Outpost24:
-    def __init__(self, host, token):
+    def __init__(self, host, token, ssl_verify = True):
         logger_name = u'{base}.{suffix}'.format(base=LOGGER_BASENAME,
                                                 suffix=self.__class__.__name__)
         self._logger = logging.getLogger(logger_name)
         self.host = host
         self.api = '{host}/opi/XMLAPI'.format(host = host)
         self.token = token
-        self.session = self._setup_session()
+        self.session = self._setup_session(ssl_verify)
 
 
-    def _setup_session(self):
+    def _setup_session(self, ssl_verify):
         session = Session()
-        #TODO: find out why OP24 certificate is invalid and remove this line
-        session.verify = False        
+        session.verify = ssl_verify
         session.params.update({
             'APPTOKEN': self.token
         })
@@ -258,13 +259,78 @@ class Outpost24:
             return True
         return False
 
+
+    def get_scanlog(self, filter = None, start = 0, limit = 1000, page = 0):
+        """
+        Retrieves scan log entries with filtering capabilities.
+        
+        Usage:
+
+            from outpost24hiablib import Outpost24
+            from outpost24hiablib import Filter
+
+            url = "https://<host>"
+            token = "<token>"
+
+            op24lib = Outpost24(url, token)
+            f = Filter()
+            f.add("TARGETGROUPNAME", "Prod")
+            scanlog = op24lib.get_scanlog(f)
+
+            for scan in scanlog.data:
+            print(scan.target)
+        """
+        payload="ACTION=SCANLOG&page={2}&start={0}&limit={1}&sort=DSCANSTARTDATE&dir=DESC&JSON=1".format(start, limit, page)
+        if filter is not None:
+            payload += filter.urlencode()
+
+        response = self._post_url_urlencoded(self.api, payload)
+        # Convert json to object, making its attributes accessible by using: 
+        # object.attribute, instead of object['attribute']
+        return json.loads(response, object_hook=lambda d: namedtuple('X', d.keys())(*d.values()))
+
+
+    def _post_url_urlencoded(self, url, payload):
+        results = []
+        try:
+            self.session.headers["content-type"] = "application/x-www-form-urlencoded; charset=UTF-8"
+            response = self.session.post(url, data=payload)
+            return response.text
+        except ValueError:
+            self._logger.error('Error getting url :%s', url)
+            return []
+        finally:
+            self.session.headers.pop("content-type")
+
+
     def _post_url(self, url, payload, request_timeout=120):
         results = []
         payload['REQUESTTIMEOUT'] = request_timeout
         try:
             response = self.session.post(url, data=payload)
-            #print(response.text)
             return response.text
         except ValueError:
             self._logger.error('Error getting url :%s', url)
             return []
+
+class Filter:
+    """
+    Creates a filter to a request in Outpost24.
+    Usage:
+        filter = Filter()
+        filter.add_filter(field = "TARGETGROUPNAME", value = "prod")
+        op24lib.get_scanlog(filter)
+    """
+    def __init__(self):
+        self.filters = []
+
+    def add(self, field, value, type = "string", comparison = "all"):
+        filter = "filter%5B{0}%5D%5Bfield%5D={1}&filter%5B{0}%5D%5Bdata%5D%5Btype%5D={2}&filter%5B{0}%5D%5Bdata%5D%5Bcomparison%5D={3}&filter%5B{0}%5D%5Bdata%5D%5Bvalue%5D={4}".format(len(self.filters), field, type, comparison, value)
+        self.filters.append(filter)
+
+    def urlencode(self):
+        result = ""
+        for f in self.filters:
+            result += "&"
+            result += f
+        return result
