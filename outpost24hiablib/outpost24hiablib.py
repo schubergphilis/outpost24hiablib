@@ -290,7 +290,7 @@ class Outpost24:
             if(response.ok):
                 return response.text
             else:
-                self._logger.error('Posting to url: %s failed and results in response code: %s', url, str(response.status_code))
+                self._logger.error('Posting to url: %s failed with response code: %s', url, str(response.status_code))
                 return []
         except ValueError:
             self._logger.error('Error getting url :%s', url)
