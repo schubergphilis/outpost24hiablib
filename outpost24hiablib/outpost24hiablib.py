@@ -45,20 +45,29 @@ class Outpost24:
     def get_users(self):
         payload={'ACTION': 'SUBACCOUNTDATA', 'node': '-1', 'INCLUDESELF': '0', 'limit': '-1', 'id': '-1'}
         response = ET.fromstring(self._post_url(self.api,payload))
-        users = response.findall('USERLIST')[0].findall('USER')
-        return [User(self,u) for u in users]
+        userlist = response.findall('USERLIST')
+        if(len(userlist) >= 1):
+            users = userlist[0].findall('USER')
+            return [User(self,u) for u in users]
+        return []
 
     def get_usergroups(self):
         payload={'ACTION': 'USERGROUPDATA', 'limit': '-1'}
         response = ET.fromstring(self._post_url(self.api,payload))
-        usergroups = response.findall('USERGROUPLIST')[0].findall('USERGROUP')
-        return [UserGroup(self,g) for g in usergroups]
+        usergrouplist = response.findall('USERGROUPLIST')
+        if(len(usergrouplist) >= 1):
+            usergroups = usergrouplist[0].findall('USERGROUP')
+            return [UserGroup(self,g) for g in usergroups]
+        return []
 
     def get_targetgroups(self):
         payload={'ACTION': 'TARGETGROUPDATA', 'node': '-1', 'INCLUDEUNGROUP': '1', 'limit': '-1', 'id': '-1'}
         response = ET.fromstring(self._post_url(self.api,payload))
-        groups = response.findall('GROUPLIST')[0].findall('GROUP')
-        return [TargetGroup(self,g) for g in groups]
+        grouplist = response.findall('GROUPLIST')
+        if(len(grouplist) >= 1):
+            groups = grouplist[0].findall('GROUP')
+            return [TargetGroup(self,g) for g in groups]
+        return []
 
     def get_targets(self, targetgroup = None):
         groupid = "-1"
@@ -66,14 +75,20 @@ class Outpost24:
             groupid = str(targetgroup.xid)
         payload={'ACTION': 'TARGETDATA', 'GROUP': groupid, 'limit': '-1', 'sort': 'HOSTNAME', 'dir': 'ASC'}
         response = ET.fromstring(self._post_url(self.api,payload))
-        targets = response.findall('TARGETLIST')[0].findall('TARGET')
-        return [Target(self,t) for t in targets]
+        targetlist = response.findall('TARGETLIST')
+        if(len(targetlist) >= 1):
+            targets = targetlist[0].findall('TARGET')
+            return [Target(self,t) for t in targets]
+        return []
 
     def get_scanners(self):
         payload={'ACTION': 'SCANNERDATA', 'SCANNERS': '1', 'GROUPS': '1', 'limit': '-1', 'sort': 'NAME', 'dir': 'ASC'}
         response = ET.fromstring(self._post_url(self.api,payload))
-        scanners = response.findall('SCANNERLIST')[0].findall('SCANNER')
-        return [Scanner(self,s) for s in scanners]
+        scannerlist = response.findall('SCANNERLIST')
+        if(len(scannerlist) >= 1):
+            scanners = scannerlist[0].findall('SCANNER')
+            return [Scanner(self,s) for s in scanners]
+        return []
 
     def get_parent_targetgroup_of_targetgroup(self, targetgroup):
         for t in self.get_targetgroups():
@@ -182,7 +197,7 @@ class Outpost24:
             return True
         return False
 
-    def create_targets(self, targetlist, targetgroup, dnslookup, scanner, CUSTOM0=None, CUSTOM1=None, CUSTOM2=None, CUSTOM3=None, CUSTOM4=None, CUSTOM5=None):
+    def create_targets(self, targetlist, targetgroup, dnslookup, scanner, CUSTOM0=None, CUSTOM1=None, CUSTOM2=None, CUSTOM3=None, CUSTOM4=None, CUSTOM5=None, CUSTOM6=None, CUSTOM7=None, CUSTOM8=None, CUSTOM9=None):
         result = []
         print(targetlist)
         targetliststr = '\n'.join(targetlist)
@@ -200,6 +215,15 @@ class Outpost24:
             payload['CUSTOM4'] = CUSTOM4
         if(CUSTOM5 != None):
             payload['CUSTOM5'] = CUSTOM5
+        if(CUSTOM6 != None):
+            payload['CUSTOM6'] = CUSTOM5
+        if(CUSTOM7 != None):
+            payload['CUSTOM7'] = CUSTOM5
+        if(CUSTOM8 != None):
+            payload['CUSTOM8'] = CUSTOM5
+        if(CUSTOM9 != None):
+            payload['CUSTOM9'] = CUSTOM5
+
         response = self._post_url(self.api,payload)
         r = json.loads(response)
         if(r['success']==True):
@@ -263,8 +287,11 @@ class Outpost24:
         payload['REQUESTTIMEOUT'] = request_timeout
         try:
             response = self.session.post(url, data=payload)
-            #print(response.text)
-            return response.text
+            if(response.ok):
+                return response.text
+            else:
+                self._logger.error('Posting to url: %s failed and results in response code: %s', url, str(response.status_code))
+                return []
         except ValueError:
             self._logger.error('Error getting url :%s', url)
             return []

@@ -192,8 +192,8 @@ class Target(object):
         return xmltools.get_bool_from_child_if_exists(self._data, 'PCI')
 
     @property
-    def custom4(self):
-        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM4')
+    def custom0(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM0')
 
     @property
     def custom1(self):
@@ -204,16 +204,40 @@ class Target(object):
         return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM2')
 
     @property
+    def custom3(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM3')
+
+    @property
+    def custom4(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM4')
+
+    @property
+    def custom5(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM5')
+
+    @property
+    def custom6(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM6')
+
+    @property
+    def custom7(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM7')
+    
+    @property
+    def custom8(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM8')
+
+    @property
+    def custom9(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM9')
+
+    @property
     def ignorecerts(self):
         return xmltools.get_bool_from_child_if_exists(self._data, 'IGNORECERTS')
 
     @property
     def hasdiscoverydata(self):
         return xmltools.get_bool_from_child_if_exists(self._data, 'HASDISCOVERYDATA')
-
-    @property
-    def custom0(self):
-        return xmltools.get_str_from_child_if_exists(self._data, 'CUSTOM0')
 
     @property
     def cvss_sr_integ(self):
@@ -234,3 +258,11 @@ class Target(object):
     @property
     def high_count(self):
         return xmltools.get_int_from_child_if_exists(self._data, 'HIGH_COUNT')
+
+    @property
+    def limited(self):
+        return xmltools.get_int_from_child_if_exists(self._data, 'LIMITED')
+
+    @property
+    def virtualhosts(self):
+        return xmltools.get_str_from_child_if_exists(self._data, 'VIRTUALHOSTS')
