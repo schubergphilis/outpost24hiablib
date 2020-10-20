@@ -28,7 +28,7 @@ History
 
 * Small bugfixes
 
-1.0.4 (20-10-2020)
+1.0.7 (20-10-2020)
 ------------------
 
 * Support for targets with virtual hosts
