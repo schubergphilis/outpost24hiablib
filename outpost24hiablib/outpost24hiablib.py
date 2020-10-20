@@ -7,6 +7,7 @@ import logging.config
 from requests import Session
 import xml.etree.ElementTree as ET
 import json
+import os
 from .outpost24exceptions import AuthFailed
 from .entities import User
 from .entities import TargetGroup
@@ -20,6 +21,7 @@ LOGGER_BASENAME = '''outpost24hiablib'''
 
 class Outpost24:
     def __init__(self, host, token):
+        logging.config.fileConfig('logging.conf')
         logger_name = u'{base}.{suffix}'.format(base=LOGGER_BASENAME,
                                                 suffix=self.__class__.__name__)
         self._logger = logging.getLogger(logger_name)
@@ -292,13 +294,15 @@ class Outpost24:
                 if(result == 'false'):
                     errorcode = xmltools.get_str_from_child_if_exists(textresponse, 'ERRORCODE')
                     message = xmltools.get_str_from_child_if_exists(textresponse, 'MESSAGE')
-                    self._logger.error('Posting to url: %s failed with error code: %s and message: %s', url, errorcode, message)
-                    raise RuntimeError('Failed to call Outpost24 HIAB API')
+                    errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, errorcode, message)
+                    self._logger.error(errorstr)
+                    raise RuntimeError('Failed to call Outpost24 HIAB API' + os.linesep + errorstr)
                 else:
                     return response.text
             else:
-                self._logger.error('Posting to url: %s failed with response code: %s', url, str(response.status_code))
-                raise RuntimeError('Failed to call Outpost24 HIAB API')
-        except ValueError:
+                errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, str(response.status_code))
+                self._logger.error(errorstr)
+                raise RuntimeError('Failed to call Outpost24 HIAB API' + os.linesep + errorstr)
+        except ValueError as e:
             self._logger.error('Error getting url :%s', url)
-            raise RuntimeError('Failed to call Outpost24 HIAB API')
+            raise RuntimeError(str(e))
