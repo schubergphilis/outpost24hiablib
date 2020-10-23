@@ -33,3 +33,8 @@ History
 
 * Support for targets with virtual hosts
 * Improved error handling
+
+1.0.9 (23-10-2020)
+------------------
+
+* Support for updating targets

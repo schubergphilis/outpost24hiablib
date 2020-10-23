@@ -82,6 +82,16 @@ class Outpost24:
             return [Target(self,t) for t in targets]
         return []
 
+    def get_target(self, xid):
+        payload={'ACTION': 'TARGETDATA', 'XID': xid, 'CLEANSETTINGS': 1, 'id': xid}
+        response = ET.fromstring(self._post_url(self.api,payload))
+        targetlist = response.findall('TARGETLIST')
+        if(len(targetlist) >= 1):
+            targets = targetlist[0].findall('TARGET')
+            if(len(targetlist) >= 1):
+                return Target(self,targets[0])
+        return None
+
     def get_scanners(self):
         payload={'ACTION': 'SCANNERDATA', 'SCANNERS': '1', 'GROUPS': '1', 'limit': '-1', 'sort': 'NAME', 'dir': 'ASC'}
         response = ET.fromstring(self._post_url(self.api,payload))
@@ -163,7 +173,7 @@ class Outpost24:
                  'BOALLHOSTS': boallhosts_val, 'ALLSCANNERS': allscanners_val, 'SCANNERLIST': scannerliststr}
 
         response = self._post_url(self.api,payload)
-        r = json.loads(response)
+        r = self._post_url_with_json_response(self.api, payload)
         if(r['success']==True):
             xid = r['data']['XID']
             users = self.get_users()
@@ -171,7 +181,6 @@ class Outpost24:
                 if(u.xid == xid):
                     return u
         elif(r['success']==False):
-            print(r['data']['errorMessage'])
             raise RuntimeError(r['data']['errorMessage'])
         return None
 
@@ -225,8 +234,7 @@ class Outpost24:
         if(CUSTOM9 != None):
             payload['CUSTOM9'] = CUSTOM5
 
-        response = self._post_url(self.api,payload)
-        r = json.loads(response)
+        r = self._post_url_with_json_response(self.api, payload)
         if(r['success']==True):
             targets = self.get_targets(targetgroup)
             for t1 in targets:
@@ -234,8 +242,7 @@ class Outpost24:
                     if(t1.hostname == t2 or t1.ipaddress == t2):
                         result.append(t1)
         elif(r['success']==False):
-            print(r['data']['errorMessage'])
-            raise RuntimeError
+            raise RuntimeError(r['data']['errorMessage'])
         return result
 
     def delete_targets(self, targetlist):
@@ -252,22 +259,137 @@ class Outpost24:
             return True
         return False
 
+    def update_target(self, target,
+                        macaddress = "",
+                        businesscriticality = "MEDIUM",
+                        exposed = 0,
+                        scannerid = 0,
+                        virtualhosts = "",
+                        hiddenurls = "",
+                        urlblacklist = "",
+                        requestbodyblacklist = "",
+                        cvss_cdrp = "ND",
+                        cvss_sr_avail = "ND",
+                        cvss_sr_integ = "ND",
+                        cvss_sr_conf = "ND",
+                        cvss_td = "ND",
+                        custom0 = "",
+                        custom1 = "",
+                        custom2 = "",
+                        custom3 = "",
+                        custom4 = "",
+                        custom5 = "",
+                        custom6 = "",
+                        custom7 = "",
+                        custom8 = "",
+                        custom9 = "",
+                        testresults = "",
+                        authenticationtype = 0,
+                        sshusername = "",
+                        sshpassword = "",
+                        sshsubstituteuser = "",
+                        sshpublickey = "",
+                        sshprivatekey = "",
+                        sshprivatekeypassword = "",
+                        smbdomain = "",
+                        smbntlmv1 = 0,
+                        smbusername = "",
+                        smbpassword = "",
+                        enableremoteregistry = 0,
+                        cyberarkusername = "",
+                        cyberarkname = "",
+                        cyberarkoverridesafe = "",
+                        cyberarkoverridefolder = "",
+                        cyberarkdomain = "",
+                        cyberarkntlmv1 = 0,
+                        cyberarkenableremoteregistry = 0,
+                        vsphereusername = "",
+                        vspherepassword = "",
+                        ignorecerts = 0,
+                        thycoticsshsecret = "",
+                        thycoticsshoverridepath = "",
+                        thycoticsshsubstituteuser = "",
+                        thycoticsmbsecret = "",
+                        thycoticsmboverridepath = "",
+                        thycoticsmbntlmv1 = 0,
+                        thycoticsmbenableremoteregistry = 0,
+                        sshport = 22,
+                        compliancesenabled = "",
+                        databases = "<itemlist></itemlist>"):
+        payload={'ACTION': 'UPDATETARGETDATA', 'XID': target.xid}
+        payload['MACADDRESS'] = macaddress
+        payload['BUSINESSCRITICALITY'] = businesscriticality
+        payload['EXPOSED'] = exposed
+        payload['SCANNERID'] = scannerid
+        payload['VIRTUALHOSTS'] = virtualhosts
+        payload['HIDDENURLS'] = hiddenurls
+        payload['URLBLACKLIST'] = urlblacklist
+        payload['REQUESTBODYBLACKLIST'] = requestbodyblacklist
+        payload['CVSS_CDRP'] = cvss_cdrp
+        payload['CVSS_SR_AVAIL'] = cvss_sr_avail
+        payload['CVSS_SR_INTEG'] = cvss_sr_integ
+        payload['CVSS_SR_CONF'] = cvss_sr_conf
+        payload['CVSS_TD'] = cvss_td
+        payload['CUSTOM0'] = custom0
+        payload['CUSTOM1'] = custom1
+        payload['CUSTOM2'] = custom2
+        payload['CUSTOM3'] = custom3
+        payload['CUSTOM4'] = custom4
+        payload['CUSTOM5'] = custom5
+        payload['CUSTOM6'] = custom6
+        payload['CUSTOM7'] = custom7
+        payload['CUSTOM8'] = custom8
+        payload['CUSTOM9'] = custom9
+        payload['TESTRESULTS'] = testresults
+        payload['AUTHENTICATIONTYPE'] = authenticationtype
+        payload['SSHUSERNAME'] = sshusername
+        payload['SSHPASSWORD'] = sshpassword
+        payload['SSHSUBSTITUTEUSER'] = sshsubstituteuser
+        payload['SSHPUBLICKEY'] = sshpublickey
+        payload['SSHPRIVATEKEY'] = sshprivatekey
+        payload['SSHPRIVATEKEYPASSWORD'] = sshprivatekeypassword
+        payload['SMBDOMAIN'] = smbdomain
+        payload['SMBNTLMV1'] = smbntlmv1
+        payload['SMBUSERNAME'] = smbusername
+        payload['SMBPASSWORD'] = smbpassword
+        payload['ENABLEREMOTEREGISTRY'] = enableremoteregistry
+        payload['CYBERARKUSERNAME'] = cyberarkusername
+        payload['CYBERARKNAME'] = cyberarkname
+        payload['CYBERARKOVERRIDESAFE'] = cyberarkoverridesafe
+        payload['CYBERARKOVERRIDEFOLDER'] = cyberarkoverridefolder
+        payload['CYBERARKDOMAIN'] = cyberarkdomain
+        payload['CYBERARKNTLMV1'] = cyberarkntlmv1
+        payload['CYBERARKENABLEREMOTEREGISTRY'] = cyberarkenableremoteregistry
+        payload['VSPHEREUSERNAME'] = vsphereusername
+        payload['VSPHEREPASSWORD'] = vspherepassword
+        payload['IGNORECERTS'] = ignorecerts
+        payload['THYCOTICSSHSECRET'] = thycoticsshsecret
+        payload['THYCOTICSSHOVERRIDEPATH'] = thycoticsshoverridepath
+        payload['THYCOTICSSHSUBSTITUTEUSER'] = thycoticsshsubstituteuser
+        payload['THYCOTICSMBSECRET'] = thycoticsmbsecret
+        payload['THYCOTICSMBOVERRIDEPATH'] = thycoticsmboverridepath
+        payload['THYCOTICSMBNTLMV1'] = thycoticsmbntlmv1
+        payload['THYCOTICSMBENABLEREMOTEREGISTRY'] = thycoticsmbenableremoteregistry
+        payload['SSHPORT'] = sshport
+        payload['COMPLIANCESENABLED'] = compliancesenabled
+        payload['DATABASES'] = databases
+        
+        r = self._post_url_with_json_response(self.api, payload)
+        xid = r['data']['XID']
+        tg = self.get_target(xid)
+        return tg
+
+
     def create_targetgroup(self, name, parent_targetgroup=None):
         payload={'ACTION': 'UPDATETARGETGROUPDATA', 'JSON': '1', 'XID': '-1', 'NAME': name}
         if(parent_targetgroup):
             payload['XIPARENTID'] = parent_targetgroup.xid
-        response = self._post_url(self.api,payload)
-        r = json.loads(response)
-        if(r['success']==True):
-            xid = r['data']['XID']
-            tgs = self.get_targetgroups()
-            for t in tgs:
-                if(t.xid == xid):
-                    return t
-        elif(r['success']==False):
-            print(r['data']['errorMessage'])
-            raise RuntimeError
-        return None
+        r = self._post_url_with_json_response(self.api, payload)
+        xid = r['data']['XID']
+        tgs = self.get_targetgroups()
+        for t in tgs:
+            if(t.xid == xid):
+                return t
 
     def delete_targetgroups(self, targetgrouplist):
         targetgroupliststr=""
@@ -282,6 +404,26 @@ class Outpost24:
         if(result == 'true'):
             return True
         return False
+
+    def _post_url_with_json_response(self, url, payload, request_timeout=120):
+        results = []
+        payload['REQUESTTIMEOUT'] = request_timeout
+        payload['JSON'] = '1'
+        try:
+            response = self.session.post(url, data=payload)
+            if(response.ok):
+                r = json.loads(response.text)
+                if(r['success']==True):
+                    return r
+                elif(r['success']==False):
+                    raise RuntimeError(r['data']['errorMessage'])
+            else:
+                errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, str(response.status_code))
+                self._logger.error(errorstr)
+                raise RuntimeError('Failed to call Outpost24 HIAB API' + os.linesep + errorstr)
+        except ValueError as e:
+            self._logger.error('Error getting url :%s', url)
+            raise RuntimeError(str(e))
 
     def _post_url(self, url, payload, request_timeout=120):
         results = []
