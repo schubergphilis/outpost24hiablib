@@ -386,11 +386,12 @@ class Outpost24:
         payload['XIPARENTID'] = dst_parent_targetgroup.xid
         payload['GROUPXID'] = src_targetgroup.xid
         
-        response = self._post_url(self.api, payload)
+        response = ET.fromstring(self._post_url(self.api,payload))
         result = xmltools.get_str_from_child_if_exists(response, 'SUCCESS')
         if(result == 'true'):
             return True
-        return False
+        else:
+            return False
 
     def create_targetgroup(self, name, parent_targetgroup=None):
         payload={'ACTION': 'UPDATETARGETGROUPDATA', 'JSON': '1', 'XID': '-1', 'NAME': name}
