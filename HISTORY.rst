@@ -38,3 +38,8 @@ History
 ------------------
 
 * Support for updating targets
+
+1.0.10 (30-10-2020)
+-------------------
+
+* Support for moving targets between targetgroups

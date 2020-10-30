@@ -379,6 +379,19 @@ class Outpost24:
         tg = self.get_target(xid)
         return tg
 
+    def move_target(self, target, src_targetgroup, dst_targetgroup, dst_parent_targetgroup):
+        payload={'ACTION': 'UPDATETARGETGROUPDATA', 'MOVE': 'true'}
+        payload['ADDTARGETLIST'] = target.xid
+        payload['XID'] = dst_targetgroup.xid
+        payload['XIPARENTID'] = dst_parent_targetgroup.xid
+        payload['GROUPXID'] = src_targetgroup.xid
+        
+        response = ET.fromstring(self._post_url(self.api,payload))
+        result = xmltools.get_str_from_child_if_exists(response, 'SUCCESS')
+        if(result == 'true'):
+            return True
+        else:
+            return False
 
     def create_targetgroup(self, name, parent_targetgroup=None):
         payload={'ACTION': 'UPDATETARGETGROUPDATA', 'JSON': '1', 'XID': '-1', 'NAME': name}
