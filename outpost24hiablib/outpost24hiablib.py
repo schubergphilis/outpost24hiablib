@@ -20,6 +20,7 @@ LOGGER_BASENAME = '''outpost24hiablib'''
 
 
 class Outpost24:
+
     def __init__(self, host, token):
         logging.config.fileConfig('logging.conf')
         logger_name = u'{base}.{suffix}'.format(base=LOGGER_BASENAME,
@@ -29,7 +30,6 @@ class Outpost24:
         self.api = '{host}/opi/XMLAPI'.format(host = host)
         self.token = token
         self.session = self._setup_session()
-
 
     def _setup_session(self):
         session = Session()
@@ -444,16 +444,19 @@ class Outpost24:
         try:
             response = self.session.post(url, data=payload)
             if(response.ok):
-                textresponse = ET.fromstring(response.text)
-                result = xmltools.get_str_from_child_if_exists(textresponse, 'SUCCESS')
-                if(result == 'false'):
-                    errorcode = xmltools.get_str_from_child_if_exists(textresponse, 'ERRORCODE')
-                    message = xmltools.get_str_from_child_if_exists(textresponse, 'MESSAGE')
-                    errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, errorcode, message)
-                    self._logger.error(errorstr)
-                    raise RuntimeError('Failed to call Outpost24 HIAB API' + os.linesep + errorstr)
+                if(len(response.text)>1):
+                    textresponse = ET.fromstring(response.text)
+                    result = xmltools.get_str_from_child_if_exists(textresponse, 'SUCCESS')
+                    if(result == 'false'):
+                        errorcode = xmltools.get_str_from_child_if_exists(textresponse, 'ERRORCODE')
+                        message = xmltools.get_str_from_child_if_exists(textresponse, 'MESSAGE')
+                        errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, errorcode, message)
+                        self._logger.error(errorstr)
+                        raise RuntimeError('Failed to call Outpost24 HIAB API' + os.linesep + errorstr)
+                    else:
+                        return response.text
                 else:
-                    return response.text
+                    raise RuntimeError('Failed to call Outpost24 HIAB API as the request is invalid.')
             else:
                 errorstr = 'Posting to url: {} failed with error code: {} and message: {}'.format(url, str(response.status_code))
                 self._logger.error(errorstr)
