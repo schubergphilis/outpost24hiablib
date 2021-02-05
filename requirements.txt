@@ -1,1 +1,2 @@
 requests >= 2.22.0
+outpost24hiabclient >= 0.1.0

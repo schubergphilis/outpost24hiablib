@@ -43,3 +43,7 @@ History
 -------------------
 
 * Support for moving targets between targetgroups
+
+1.0.11 (05-02-2021)
+-------------------
+* Deprecating library. New library can be found here: https://github.com/schubergphilis/outpost24hiabclient

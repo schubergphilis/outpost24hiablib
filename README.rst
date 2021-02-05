@@ -4,6 +4,7 @@ outpost24lib
 
 A python library for interfacing with Outpost24 HIAB api
 
+**This library is deprecated. Please, use https://github.com/schubergphilis/outpost24hiabclient instead.**
 
 * Documentation: https://outpost24hiablib.readthedocs.org/en/latest
 
