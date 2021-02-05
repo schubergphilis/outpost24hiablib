@@ -6,6 +6,8 @@
 Welcome to outpost24hiablib's documentation!
 ============================================
 
+**This library is deprecated. Please, use https://github.com/schubergphilis/outpost24hiabclient instead.**
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
